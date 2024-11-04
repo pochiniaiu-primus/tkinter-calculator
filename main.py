@@ -1,4 +1,5 @@
 from tkinter import *
+import ast
 
 # Create the main application window for the calculator
 root = Tk()
@@ -19,14 +20,36 @@ def get_operation(operator):
     i += length  # Move the cursor position by the length of the operator
 
 
-root.title("Calculator") # Set the title of the window
-root.minsize(width=230, height=150)
-root.config(padx=10, pady=10) # Add padding around the window edges
+def clear_all():
+    """Clear the display by deleting all characters"""
+    display.delete(0, END)
+
+
+def calculate():
+    """ Evaluates the mathematical expression from the display.
+    Retrieves the input expression, parses it into an Abstract Syntax Tree (AST),
+    compiles, and evaluates it to produce a result. If successful, clears the display
+    and shows the result. If an error occurs during parsing or evaluation, it clears
+    the display and displays 'Error'."""
+    entire_string = display.get()  # Get the entire string input from the display
+    try:
+        node = ast.parse(entire_string, mode='eval')  # Parse the string into an AST node for evaluation
+        result = eval(compile(node, '<string>', 'eval'))  # Compile and evaluate the AST node to get the result
+        clear_all()  # Clear the display before showing the result
+        display.insert(0, result)  # Insert the calculated result into the display
+    except Exception:
+        clear_all()
+        display.insert(0, 'Error')  # Show 'Error' in the display
+
+
+root.title("Calculator")  # Set the title of the window
+root.minsize(width=300, height=200)
+root.config(padx=10, pady=10)  # Add padding around the window edges
 
 # Create the display area for calculations and results
-display = Entry(root, width=15, font=("Arial", 18), borderwidth=2,
+display = Entry(root, width=20, font=("Arial", 18), borderwidth=2,
                 relief="solid", justify='right')
-display.grid(row=0, column=0, columnspan=6, pady=(10, 10), sticky="EW") # Position the display
+display.grid(row=0, column=0, columnspan=6, pady=(10, 10), sticky="EW")  # Position the display
 
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 counter = 0
@@ -58,6 +81,14 @@ for x in range(4):  # Loop over rows
                             command=lambda text=button_text: get_operation(text))
             count += 1
             button.grid(row=x + 2, column=y + 3)  # Position the operation button
+
+# Create a button to clear the display with label 'AC' (All Clear)
+Button(root, text='AC', width=2, height=2, highlightthickness=0,
+       command=clear_all).grid(row=5, column=0)
+
+# Create a button to calculate the result with label '='
+Button(root, text='=', width=2, height=2, highlightthickness=0,
+       command=calculate).grid(row=5, column=2)
 
 # Run the application
 root.mainloop()
