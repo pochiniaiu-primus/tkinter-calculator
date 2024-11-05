@@ -43,6 +43,23 @@ def calculate():
         display.insert(0, 'Error')  # Show 'Error' in the display
 
 
+def undo():
+    """
+    Removes the last character from the string displayed in the user interface.
+    This method retrieves the current string from the display. If the string is not empty,
+    it removes the last character and updates the display with the new string.
+    If the string is already empty, it clears the display.
+    """
+    entire_string = display.get()  # Get the entire string input from the display
+    if len(entire_string):
+        new_string = entire_string[:-1]  # Remove the last character from the string
+        clear_all()
+        # Insert the new string (without the last character) back into the display at index 0
+        display.insert(0, new_string)
+    else:
+        clear_all()
+        display.insert(0, '')  # Insert an empty string into the display
+
 root.title("Calculator")  # Set the title of the window
 root.minsize(width=300, height=200)
 root.config(padx=10, pady=10)  # Add padding around the window edges
@@ -92,6 +109,10 @@ Button(root, text='AC', width=2, height=2, highlightthickness=0,
 # Create a button to calculate the result with label '='
 Button(root, text='=', width=2, height=2, highlightthickness=0,
        font=bold_font, command=calculate).grid(row=5, column=2)
+
+# Create and configure a button widget to allow the user to undo the last action.
+Button(root, text='<-', width=4, height=2, highlightthickness=0,
+       font=bold_font, command=lambda: undo()).grid(row=5, column=4)
 
 # Run the application
 root.mainloop()
