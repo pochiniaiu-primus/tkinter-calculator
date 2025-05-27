@@ -2,6 +2,7 @@
 
 This is a calculator application built using Python's Tkinter library. It allows users to perform basic arithmetic
 operations and evaluate mathematical expressions.
+
 ![img.png](img.png)
 
 ## Features
